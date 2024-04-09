@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CollectionManager.AddCollectionPage"
+             Title="Edit Collection">
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="20">
+
+            <!-- Pole do wprowadzania nazwy kolekcji -->
+            <Entry x:Name="NameEntry"
+                   Placeholder="Collection Name"
+                   Text="{Binding Name}"/>
+
+            <!-- Pole do wprowadzania opisu kolekcji -->
+            <Editor x:Name="DescriptionEntry"
+                    Placeholder="Description"
+                    Text="{Binding Description}"
+                    AutoSize="TextChanges"
+                    HeightRequest="150"/>
+
+            <!-- Miejsce na wyświetlenie wybranego obrazu kolekcji -->
+            <Image x:Name="CollectionImageView"
+                   Aspect="AspectFit"
+                   HeightRequest="200"/>
+
+            <!-- Przycisk do wyboru obrazu -->
+            <Button Text="Pick Image"
+                    Clicked="PickImageButton_Clicked"/>
+
+            <!-- Przycisk do zapisu kolekcji -->
+            <Button Text="Save"
+                    Clicked="SaveButton_Clicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

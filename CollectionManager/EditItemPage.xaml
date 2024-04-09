@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CollectionManager.EditItemPage"
+             Title="EditItemPage">
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="20">
+
+            <Entry x:Name="NameEntry" Placeholder="Name"/>
+
+            <Entry x:Name="QuantityEntry" Placeholder="Quantity" Keyboard="Numeric"/>
+
+            <Picker x:Name="ConditionPicker" Title="Condition">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>New</x:String>
+                        <x:String>Used</x:String>
+                        <x:String>Refurbished</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Picker x:Name="OwnershipStatusPicker" Title="Ownership Status">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Owned</x:String>
+                        <x:String>ForSale</x:String>
+                        <x:String>Sold</x:String>
+                        <x:String>Wanted</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Entry x:Name="RatingEntry" Placeholder="Rating (1-10)" Keyboard="Numeric"/>
+
+            <Image x:Name="ItemImage" HeightRequest="200" Aspect="AspectFill"/>
+
+            <Button Text="Pick Image" Clicked="PickItemImage_Clicked"/>
+
+            <StackLayout x:Name="AdditionalValuesLayout"></StackLayout>
+
+            <Button Text="Add Additional Field" Clicked="AddAdditionalFieldButton_Clicked"/>
+
+            <Button Text="Save" Clicked="SaveButton_Clicked"/>
+
+            <Button Text="Delete Item"
+                    BackgroundColor="#FF6347"
+                    TextColor="White"
+                    Clicked="DeleteItemButton_Clicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

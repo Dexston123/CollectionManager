@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CollectionManager.CollectionDetailsPage"
+             xmlns:local="clr-namespace:CollectionManager"
+             Title="{Binding Name}"
+             BackgroundColor="#080c15">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="FontSize" Value="Micro"/>
+                <Setter Property="BackgroundColor" Value="#95aee4"/>
+                <Setter Property="TextColor" Value="#e4e7ef"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+            </Style>
+            <Style x:Key="LabelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="#e4e7ef"/>
+                <Setter Property="FontSize" Value="Small"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
+            <local:OwnershipStatusToOpacityConverter x:Key="OwnershipStatusToOpacity"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="10" HorizontalOptions="FillAndExpand">
+            <Button Text="Add New Item" Clicked="AddNewItemButton_Clicked" Style="{StaticResource ButtonStyle}"/>
+
+            <CollectionView ItemsSource="{Binding Items}" HorizontalOptions="FillAndExpand" Margin="0,0,0,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BackgroundColor="#153e9c" Padding="10" CornerRadius="10" Margin="150,10,150,10" Opacity="{Binding OwnershipStatus, Converter={StaticResource OwnershipStatusToOpacity}}">
+                            <VerticalStackLayout Spacing="10">
+                                <Image Source="{Binding ImagePath}"
+                                       Aspect="AspectFill"
+                                       HeightRequest="100"
+                                       WidthRequest="100"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{Binding Name}"
+                                       Style="{StaticResource LabelStyle}"
+                                       FontAttributes="Bold"/>
+                                <Label Text="{Binding Quantity, StringFormat='Ilość: {0}'}"
+                                       Style="{StaticResource LabelStyle}"/>
+                                <Label Text="{Binding Condition, StringFormat='Stan: {0}'}"
+                                       Style="{StaticResource LabelStyle}"/>
+                                <Label Text="{Binding OwnershipStatus, StringFormat='Status: {0}'}"
+                                       Style="{StaticResource LabelStyle}"/>
+                                <Label Text="{Binding Rating, StringFormat='Ocena: {0}'}"
+                                       Style="{StaticResource LabelStyle}"/>
+                                <StackLayout BindableLayout.ItemsSource="{Binding CustomValues}" Spacing="10">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                                                <Label Text="{Binding Key}"
+                                                       Style="{StaticResource LabelStyle}" />
+                                                <Label Text="{Binding Value.Value, StringFormat=': {0}'}"
+                                                       Style="{StaticResource LabelStyle}"/>
+                                            </StackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+
+                                <Button Text="Edit" Style="{StaticResource ButtonStyle}" Clicked="EditItemButton_Clicked"/>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

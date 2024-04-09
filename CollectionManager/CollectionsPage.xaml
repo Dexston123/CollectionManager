@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CollectionManager.CollectionsPage"
+             Title="Your Collections"
+             BackgroundColor="#080c15">
+
+    <ContentPage.Resources>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="Micro"/>
+            <Setter Property="BackgroundColor" Value="#95aee4"/>
+            <Setter Property="TextColor" Value="#e4e7ef"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <StackLayout Spacing="20" Padding="10" HorizontalOptions="FillAndExpand">
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+            <Button Text="Add New Collection" Style="{StaticResource ButtonStyle}" Clicked="AddCollectionButton_Clicked"/>
+            <Button Text="Import Collection" Style="{StaticResource ButtonStyle}" Clicked="ImportCollectionButton_Clicked"/>
+        </StackLayout>
+
+        <CollectionView x:Name="collectionsView"
+                        SelectionMode="Single"
+                        SelectionChanged="OnCollectionViewSelectionChanged"
+                        ItemsSource="{Binding Collections}"
+                        HorizontalOptions="FillAndExpand">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="3"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="#153e9c" Padding="10" CornerRadius="10" Margin="15,10,15,10">
+                        <StackLayout>
+                            <Image Source="{Binding ImagePath}"
+                                   Aspect="AspectFill"
+                                   HeightRequest="100"
+                                   WidthRequest="100"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding Name}"
+                                   TextColor="#e4e7ef"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding ItemsCount, StringFormat='{0} elementów'}"
+                                   TextColor="#e4e7ef"
+                                   FontAttributes="Italic"
+                                   FontSize="Small"
+                                   HorizontalOptions="Center"/>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                <Button Text="Edit"
+                                        Clicked="EditCollectionButton_Clicked"
+                                        Style="{StaticResource ButtonStyle}"/>
+                                <Button 
+                                        Text="Eksport"
+                                        Clicked="ExportCollectionButton_Clicked"
+                                        Style="{StaticResource ButtonStyle}"/>
+                                <Button Text="Summary"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="SummaryButton_Clicked"
+                                        Style="{StaticResource ButtonStyle}"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+</ContentPage>
