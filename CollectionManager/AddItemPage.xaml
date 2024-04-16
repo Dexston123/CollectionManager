@@ -34,7 +34,7 @@
 
             <Entry x:Name="RatingEntry" Placeholder="Rating (1-10)" Keyboard="Numeric"/>
 
-            <Image x:Name="ItemImage" HeightRequest="200" Aspect="AspectFill"/>
+            <Image x:Name="ItemImage" HeightRequest="200" Aspect="AspectFit"/>
 
             <Button Text="Pick Image" Clicked="PickItemImage_Clicked"/>
 

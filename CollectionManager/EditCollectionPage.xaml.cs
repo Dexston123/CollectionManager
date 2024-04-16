@@ -89,6 +89,8 @@ namespace CollectionManager
                     Directory.Delete(collectionFolderPath, true);
                 }
 
+                MessagingCenter.Send(this, "CollectionDeleted");
+
                 await DisplayAlert("Deleted", "Collection has been deleted.", "OK");
                 await Navigation.PopToRootAsync();
             }

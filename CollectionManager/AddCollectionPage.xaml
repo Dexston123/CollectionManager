@@ -6,28 +6,23 @@
     <ScrollView>
         <VerticalStackLayout Spacing="15" Padding="20">
 
-            <!-- Pole do wprowadzania nazwy kolekcji -->
             <Entry x:Name="NameEntry"
                    Placeholder="Collection Name"
                    Text="{Binding Name}"/>
 
-            <!-- Pole do wprowadzania opisu kolekcji -->
             <Editor x:Name="DescriptionEntry"
                     Placeholder="Description"
                     Text="{Binding Description}"
                     AutoSize="TextChanges"
                     HeightRequest="150"/>
 
-            <!-- Miejsce na wyświetlenie wybranego obrazu kolekcji -->
             <Image x:Name="CollectionImageView"
                    Aspect="AspectFit"
                    HeightRequest="200"/>
 
-            <!-- Przycisk do wyboru obrazu -->
             <Button Text="Pick Image"
                     Clicked="PickImageButton_Clicked"/>
 
-            <!-- Przycisk do zapisu kolekcji -->
             <Button Text="Save"
                     Clicked="SaveButton_Clicked"/>
 

@@ -1,7 +1,9 @@
 using Microsoft.Maui.Controls;
 using System;
+using System.IO;
 using System.Linq;
 using System.Globalization;
+using System.Collections.ObjectModel;
 
 namespace CollectionManager
 {
@@ -18,6 +20,16 @@ namespace CollectionManager
             _item = item ?? new Item();
             _collection = collection;
             BindingContext = _item;
+
+            if (string.IsNullOrEmpty(_item.ImagePath))
+            {
+                _item.ImagePath = @"C:\Users\lambo\source\repos\CollectionManager\CollectionManager\Resources\Images\default_image.png";
+                ItemImage.Source = ImageSource.FromFile(_item.ImagePath);
+            }
+            else
+            {
+                ItemImage.Source = ImageSource.FromFile(_item.ImagePath);
+            }
         }
 
         private void AddAdditionalFieldButton_Clicked(object sender, EventArgs e)
@@ -26,7 +38,7 @@ namespace CollectionManager
 
             var keyEntry = new Entry { Placeholder = "Key" };
             var typePicker = new Picker { Title = "Select type" };
-            typePicker.ItemsSource = new List<string> { "Text", "Number", "Date"};
+            typePicker.ItemsSource = new List<string> { "Text", "Number", "Date" };
             var valueEntry = new Entry { Placeholder = "Value" };
             var removeButton = new Button { Text = "Remove", BackgroundColor = Colors.Red, TextColor = Colors.White };
 
@@ -64,7 +76,6 @@ namespace CollectionManager
             AdditionalValuesLayout.Children.Add(fieldLayout);
             _additionalFieldsCount++;
         }
-
 
         private async void PickItemImage_Clicked(object sender, EventArgs e)
         {
@@ -107,7 +118,6 @@ namespace CollectionManager
                 ItemImage.Source = ImageSource.FromFile(uniqueFilePath);
             }
         }
-
 
         private void ShowDatePicker(Entry entry)
         {

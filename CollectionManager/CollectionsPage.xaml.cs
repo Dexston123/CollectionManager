@@ -15,6 +15,16 @@ namespace CollectionManager
             InitializeComponent();
             LoadCollections();
             BindingContext = this;
+
+            MessagingCenter.Subscribe<AddCollectionPage>(this, "CollectionUpdated", (sender) =>
+            {
+                LoadCollections();
+            });
+
+            MessagingCenter.Subscribe<EditCollectionPage>(this, "CollectionDeleted", (sender) =>
+            {
+                LoadCollections();
+            });
         }
 
         private void LoadCollections()
@@ -84,11 +94,17 @@ namespace CollectionManager
 
         private async void ExportCollectionButton_Clicked(object sender, EventArgs e)
         {
-            var selectedCollection = Collections.FirstOrDefault();
+            var button = sender as Button;
+            if (button == null)
+            {
+                await DisplayAlert("B³¹d", "Nie mo¿na zidentyfikowaæ przycisku.", "OK");
+                return;
+            }
 
+            var selectedCollection = button.CommandParameter as Collection;
             if (selectedCollection == null)
             {
-                await DisplayAlert("Error", "No collection selected for export.", "OK");
+                await DisplayAlert("B³¹d", "Nie wybrano kolekcji do eksportu.", "OK");
                 return;
             }
 
@@ -106,12 +122,12 @@ namespace CollectionManager
 
                 ZipFile.CreateFromDirectory(sourceFolderPath, zipFilePath);
 
-                await DisplayAlert("Success", "The collection has been successfully exported.", "OK");
+                await DisplayAlert("Sukces", $"Kolekcja zosta³a pomyœlnie wyeksportowana do:\n{zipFilePath}", "OK");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while exporting the collection: {ex.Message}");
-                await DisplayAlert("Error", "Failed to export the collection.", "OK");
+                Console.WriteLine($"Wyst¹pi³ b³¹d podczas eksportowania kolekcji: {ex.Message}");
+                await DisplayAlert("B³¹d", "Nie uda³o siê wyeksportowaæ kolekcji.", "OK");
             }
         }
 
@@ -241,31 +257,41 @@ namespace CollectionManager
         {
             foreach (var importedItem in importedCollection.Items)
             {
-                var isDuplicate = targetCollection.Items.Any(existingItem =>
-                    existingItem.Name == importedItem.Name &&
-                    existingItem.Quantity == importedItem.Quantity &&
-                    existingItem.Condition == importedItem.Condition &&
-                    existingItem.OwnershipStatus == importedItem.OwnershipStatus &&
-                    existingItem.Rating == importedItem.Rating &&
-                    existingItem.CustomValues.Count == importedItem.CustomValues.Count &&
-                    existingItem.CustomValues.All(kv => importedItem.CustomValues.ContainsKey(kv.Key) && importedItem.CustomValues[kv.Key].Value == kv.Value.Value && importedItem.CustomValues[kv.Key].DataType == kv.Value.DataType));
+                var existingItem = targetCollection.Items.FirstOrDefault(item =>
+                    item.Name == importedItem.Name &&
+                    item.Condition == importedItem.Condition &&
+                    item.OwnershipStatus == importedItem.OwnershipStatus &&
+                    item.Rating == importedItem.Rating &&
+                    item.CustomValues.Count == importedItem.CustomValues.Count &&
+                    item.CustomValues.All(kv => importedItem.CustomValues.ContainsKey(kv.Key) && importedItem.CustomValues[kv.Key].Value == kv.Value.Value && importedItem.CustomValues[kv.Key].DataType == kv.Value.DataType));
 
-                if (isDuplicate)
+                if (existingItem != null)
                 {
-                    var confirmDuplicate = await DisplayAlert("Duplicate", $"Item '{importedItem.Name}' already exists. Do you want to add a duplicate?", "Yes", "No");
-                    if (!confirmDuplicate)
+                    string userChoice = await DisplayActionSheet($"Item '{importedItem.Name}' already exists. What would you like to do?", "Cancel", null, "Duplicate", "Consolidate Quantity");
+
+                    switch (userChoice)
                     {
-                        continue;
+                        case "Duplicate":
+                            targetCollection.Items.Add(importedItem);
+                            break;
+                        case "Consolidate Quantity":
+                            existingItem.Quantity += 1;
+                            break;
+                        case "Cancel":
+                            continue;
                     }
                 }
-
-                targetCollection.Items.Add(importedItem);
+                else
+                {
+                    targetCollection.Items.Add(importedItem);
+                }
             }
 
             targetCollection.SaveToFile();
             await DisplayAlert("Success", "Collection consolidation completed successfully.", "OK");
             LoadCollections();
         }
+
 
         private async void SummaryButton_Clicked(object sender, EventArgs e)
         {

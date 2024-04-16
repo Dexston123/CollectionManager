@@ -15,10 +15,15 @@ namespace CollectionManager
 
             _collection = collection;
             _isNewCollection = isNewCollection;
-
             NameEntry.Text = _collection.Name;
             DescriptionEntry.Text = _collection.Description;
-            if (!string.IsNullOrEmpty(_collection.ImagePath))
+
+            if (string.IsNullOrEmpty(_collection.ImagePath))
+            {
+                _collection.ImagePath = @"C:\Users\lambo\source\repos\CollectionManager\CollectionManager\Resources\Images\default_image.png";
+                CollectionImageView.Source = ImageSource.FromFile(_collection.ImagePath);
+            }
+            else
             {
                 CollectionImageView.Source = ImageSource.FromFile(_collection.ImagePath);
             }
@@ -30,12 +35,20 @@ namespace CollectionManager
         {
             _collection.Name = NameEntry.Text;
             _collection.Description = DescriptionEntry.Text;
+
+            if (string.IsNullOrEmpty(_collection.ImagePath))
+            {
+                _collection.ImagePath = @"C:\Users\lambo\source\repos\CollectionManager\CollectionManager\Resources\Images\default_image.png";
+                CollectionImageView.Source = ImageSource.FromFile(_collection.ImagePath);
+            }
+
             _collection.SaveToFile();
 
             await DisplayAlert("Saved", "Collection has been saved successfully.", "OK");
-            await Navigation.PopAsync();
-        }
 
+            await Navigation.PopAsync();
+            MessagingCenter.Send(this, "CollectionUpdated");
+        }
 
         private async void PickImageButton_Clicked(object sender, EventArgs e)
         {
@@ -73,6 +86,7 @@ namespace CollectionManager
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred while picking the image: {ex.Message}");
+                await DisplayAlert("Error", "Failed to pick the image.", "OK");
             }
         }
     }

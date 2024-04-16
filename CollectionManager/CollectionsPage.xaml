@@ -42,7 +42,12 @@
                                    TextColor="#e4e7ef"
                                    FontAttributes="Bold"
                                    HorizontalOptions="Center"/>
-                            <Label Text="{Binding ItemsCount, StringFormat='{0} elementów'}"
+                            <Label Text="{Binding Description}"
+                                   TextColor="#c2c6d6"
+                                   FontAttributes="Italic"
+                                   FontSize="Small"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding ItemsCount, StringFormat='{0} elements'}"
                                    TextColor="#e4e7ef"
                                    FontAttributes="Italic"
                                    FontSize="Small"
@@ -51,9 +56,9 @@
                                 <Button Text="Edit"
                                         Clicked="EditCollectionButton_Clicked"
                                         Style="{StaticResource ButtonStyle}"/>
-                                <Button 
-                                        Text="Eksport"
+                                <Button Text="Eksport"
                                         Clicked="ExportCollectionButton_Clicked"
+                                        CommandParameter="{Binding .}"
                                         Style="{StaticResource ButtonStyle}"/>
                                 <Button Text="Summary"
                                         CommandParameter="{Binding .}"

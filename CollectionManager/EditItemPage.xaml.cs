@@ -35,11 +35,20 @@ namespace CollectionManager
         private void AddCustomField(string key, string value, string dataType)
         {
             var keyEntry = new Entry { Text = key, Placeholder = "Key" };
-            var typePicker = new Picker { Title = "Select type", SelectedItem = dataType };
+            var typePicker = new Picker { Title = "Select type" };
             typePicker.ItemsSource = new List<string> { "Text", "Number", "Date" };
             var valueEntry = new Entry { Text = value, Placeholder = "Value" };
-            var removeButton = new Button { Text = "Remove", BackgroundColor = Colors.Red, TextColor = Colors.White };
 
+            if (!string.IsNullOrEmpty(dataType))
+            {
+                typePicker.SelectedItem = dataType;
+            }
+            else
+            {
+                typePicker.SelectedIndex = 0;
+            }
+
+            var removeButton = new Button { Text = "Remove", BackgroundColor = Colors.Red, TextColor = Colors.White };
             removeButton.Clicked += (s, e) =>
             {
                 AdditionalValuesLayout.Children.Remove((s as Button).Parent as StackLayout);
@@ -53,6 +62,7 @@ namespace CollectionManager
 
             AdditionalValuesLayout.Children.Add(fieldLayout);
         }
+
 
         private void AddAdditionalFieldButton_Clicked(object sender, EventArgs e)
         {
@@ -161,31 +171,31 @@ namespace CollectionManager
         {
             if (string.IsNullOrWhiteSpace(NameEntry.Text))
             {
-                await DisplayAlert("Error", "The name of the item is required.", "OK");
+                await DisplayAlert("B³¹d", "Nazwa przedmiotu jest wymagana.", "OK");
                 return;
             }
 
             if (!int.TryParse(QuantityEntry.Text, out int quantity) || quantity <= 0)
             {
-                await DisplayAlert("Error", "Quantity must be a number greater than 0.", "OK");
+                await DisplayAlert("B³¹d", "Iloœæ musi byæ liczb¹ wiêksz¹ od 0.", "OK");
                 return;
             }
 
             if (!int.TryParse(RatingEntry.Text, out int rating) || rating < 1 || rating > 10)
             {
-                await DisplayAlert("Error", "Rating must be a number between 1 and 10.", "OK");
+                await DisplayAlert("B³¹d", "Ocena musi byæ liczb¹ pomiêdzy 1 a 10.", "OK");
                 return;
             }
 
             if (ConditionPicker.SelectedIndex == -1)
             {
-                await DisplayAlert("Error", "Selecting the condition of the item is required.", "OK");
+                await DisplayAlert("B³¹d", "Wybór stanu przedmiotu jest wymagany.", "OK");
                 return;
             }
 
             if (OwnershipStatusPicker.SelectedIndex == -1)
             {
-                await DisplayAlert("Error", "Selecting the ownership status of the item is required.", "OK");
+                await DisplayAlert("B³¹d", "Wybór statusu posiadania przedmiotu jest wymagany.", "OK");
                 return;
             }
 
@@ -202,10 +212,13 @@ namespace CollectionManager
                 var typePicker = child.Children[1] as Picker;
                 var valueEntry = child.Children[2] as Entry;
 
-                if (keyEntry != null && valueEntry != null && typePicker != null && !string.IsNullOrWhiteSpace(keyEntry.Text) && !string.IsNullOrWhiteSpace(valueEntry.Text))
+                if (keyEntry == null || valueEntry == null || typePicker == null || string.IsNullOrWhiteSpace(keyEntry.Text) || string.IsNullOrWhiteSpace(valueEntry.Text) || typePicker.SelectedIndex == -1)
                 {
-                    _item.CustomValues[keyEntry.Text] = new CustomFieldValue { Value = valueEntry.Text, DataType = typePicker.SelectedItem.ToString() };
+                    await DisplayAlert("B³¹d", "Wszystkie pola niestandardowe musz¹ byæ wype³nione, w tym wybór typu danych.", "OK");
+                    return;
                 }
+
+                _item.CustomValues[keyEntry.Text] = new CustomFieldValue { Value = valueEntry.Text, DataType = typePicker.Items[typePicker.SelectedIndex] };
             }
 
             bool isDuplicate = _collection.Items.Any(existingItem =>
